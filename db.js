@@ -1,23 +1,23 @@
-var MongoClient = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
 
-var state = {
-    db: null
+let db = null;
+
+exports.connect = (url, done) => {
+    if (db) {
+        return done();
+    }
+    MongoClient.connect(url, (error, db) => {
+        if (error) {
+            return done(error);
+        }
+        db = db.db('numbersDatabase');
+        done();
+    });
 };
 
-exports.connect = function (url, done)
-{
-    if(state.db){
-        return done;
+exports.get = () => {
+    if (!db) {
+        throw new Error('The database is not initialized!');
     }
-    MongoClient.connect(url, function(err, db){
-        if(err){
-            return done(err);
-        }
-        state.db = db.db('numbersDatabase');
-        done();
-    })
-}
-
-exports.get = function () {
-    return state.db;
-}
+    return db;
+};

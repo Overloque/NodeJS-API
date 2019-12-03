@@ -1,22 +1,21 @@
-var ObjectID = require('mongodb').ObjectID;
-var db = require('../db');
+const { ObjectID } = require('mongodb');
+const db = require('../db');
+const collection = db.get().collection('numbers');
 
-exports.all = function (cb) {
-    db.get().collection('numbers').find().toArray(function (err, docs) {
-        cb(err, docs);
-    })
+exports.all = (callback) => {
+    collection.find().toArray(callback);
 }
 
-exports.findById = function (id, cb) {
-    db.get().collection('numbers').findOne({ _id: ObjectID(id) }, function (err, doc) {
-        cb(err, doc);
-    })
+exports.findById = (id, cb) => {
+    collection.findOne({ _id: ObjectID(id) }, cb);
 }
 
-exports.create = function (number, cb) {
-    db.get().collection('numbers').insert(number, function (err, result){
-        cb(err, result);
-    })
+exports.create = (number, cb) => {
+    collection.insert(number, cb);
+}
+
+exports.delete = (id, cb) => {
+    collection.deleteOne({ _id: ObjectID(id) }, cb);
 }
 
 // exports.update = function (id, newData, cb) {
@@ -28,12 +27,3 @@ exports.create = function (number, cb) {
 //         }
 //     )
 // }
-
-exports.delete = function (id, cb) {
-    db.get().collection('numbers').deleteOne(
-        { _id: ObjectID(id)},
-        function (err, result){
-            cb(err, result);
-        }
-    )
-}
