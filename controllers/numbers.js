@@ -1,39 +1,49 @@
-var Numbers = require('../models/numbers');
+const Numbers = require('../models/numbers');
 
-exports.all = function (req, res) {
-    Numbers.all(function (err, docs) {
-        if(err){
+exports.all = (req, res) => {
+    Numbers.all((error, docs) => {
+        if (error) {
             console.log(err);
             return res.sendStatus(500);
         }
-        res.send(docs);
-    })
+        return res.send(docs);
+    });
 }
 
-exports.findById = function(req, res){
-    Numbers.findById(req.params.id, function (err, doc){
-        if(err)
-        {
-            console.log(err);
+exports.findById = (req, res) => {
+    Numbers.findById(req.params.id, (error, doc) => {
+        if (error) {
+            console.log(error);
             return res.sendStatus(500);
-        }        
+        }
         return res.send(doc);
-    })
+    });
 }
 
-exports.create = function (req, res) {
-    var number = {
-        name: req.body.name,
-        picture: req.body.picture
-    };
+exports.create = (req, res) => {
+    const { name, picture } = req.body;
 
-    Numbers.create(number, function (err, result) {
-        if(err){
-            console.log(err);
+    if (!name || !picture) {
+        return res.status(400).end('Missing one or more parameters!');
+    }
+
+    Numbers.create({ name, picture }, (error, result) => {
+        if (error) {
+            console.log(error);
             return res.sendStatus(500);
         }
-        res.send(number);
-    })
+        return res.send(number);
+    });
+}
+
+exports.delete = (req, res) => {
+    Numbers.delete(req.params.id, (error, result) => {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(500);
+        }
+        return res.sendStatus(200);
+    });
 }
 
 // exports.update = function (req, res) {
@@ -45,14 +55,4 @@ exports.create = function (req, res) {
 //         res.sendStatus(200); 
 //     })
 // }
-
-exports.delete = function (req, res) {
-    Numbers.delete(req.params.id, function (err, result) {
-        if(err){
-            console.log(err);
-            return res.sendStatus(500);
-        }
-        return res.sendStatus(200);
-    })
-}
    

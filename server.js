@@ -1,32 +1,24 @@
-var express = require ('express');
-var bodyParser = require ('body-parser');
-var db = require('./db');
-var numbersController = require('./controllers/numbers');
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./db');
+const numbersController = require('./controllers/numbers');
+const { port } = require('./config');
 
-var app = express();
+const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.urlencoded({ extended : true }));
 
-app.get('/', function(req, res){
-    res.send('Hello API');
-})
-
+app.get('/', (req, res) => res.send('Hello API'));
 app.get('/numbers', numbersController.all);
-
 app.get('/numbers/:id', numbersController.findById);
-
 app.post('/numbers', numbersController.create);
-
+app.delete('/numbers/:id', numbersController.delete);
 //app.put('/numbers/:id', numbersController.update);
 
-app.delete('/numbers/:id', numbersController.delete);
-
-db.connect('mongodb://localhost:27017/numbersDatabase', function (err) {
-    if(err){
+db.connect('mongodb://localhost:27017/numbersDatabase', error => {
+    if (error) {
         return console.log(err);
     }
-    app.listen(3012, function() {
-    console.log('API app started');
-    })
-})
+    app.listen(port, () => console.log(`Server has been started on port ${port}!`));
+});
