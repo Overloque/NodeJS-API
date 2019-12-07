@@ -6,7 +6,7 @@ exports.connect = (url, done) => {
     if (db) {
         return done();
     }
-    MongoClient.connect(url, (error, database) => {
+    MongoClient.connect(url, {useUnifiedTopology: true}, (error, database) => {
         if (error) {
             return done(error);
         }
