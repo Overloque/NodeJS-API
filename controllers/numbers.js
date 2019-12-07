@@ -45,14 +45,4 @@ exports.delete = (req, res) => {
         return res.sendStatus(200);
     });
 }
-
-// exports.update = function (req, res) {
-//     Numbers.update(req.params.id, {$set: {name: req.body.name }}, function (err, result) {
-//         if(err){
-//             console.log(err);
-//             return res.sendStatus(500);
-//         }
-//         res.sendStatus(200); 
-//     })
-// }
    

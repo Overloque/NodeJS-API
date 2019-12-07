@@ -17,13 +17,3 @@ exports.create = (number, cb) => {
 exports.delete = (id, cb) => {
     collection.deleteOne({ _id: ObjectID(id) }, cb);
 }
-
-// exports.update = function (id, newData, cb) {
-//     db.get().collection('numbers').updateOne(
-//         { _id: ObjectID(id) },
-//         newData,
-//         function (err, result) {
-//             cb(err, result);
-//         }
-//     )
-// }

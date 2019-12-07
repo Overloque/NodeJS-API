@@ -6,11 +6,11 @@ exports.connect = (url, done) => {
     if (db) {
         return done();
     }
-    MongoClient.connect(url, (error, db) => {
+    MongoClient.connect(url, (error, database) => {
         if (error) {
             return done(error);
         }
-        db = db.db('numbersDatabase');
+        db = database.db('numbersDatabase');
         done();
     });
 };
