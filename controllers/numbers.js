@@ -3,22 +3,22 @@ const { detector } = require('../config');
 const Numbers = require('../models/numbers');
 
 exports.getCars = (req, res) => {
-    Numbers.getCars(req.query.offset, (error, docs) => {
-        if (error) {
-            console.log(error);
-            return res.sendStatus(500);
-        }
-        return res.send(JSON.stringify(docs));
-    });
-}
-
-exports.findById = (req, res) => {
-    Numbers.findById(req.params.id, (error, doc) => {
+    Numbers.getCars(req.query.offset, (error, cars) => {
         if (error) {
             console.log(error);
             return res.status(500).json({status : false});
         }
-        return res.send(doc);
+        return res.json(cars);
+    });
+}
+
+exports.findById = (req, res) => {
+    Numbers.findById(req.params.id, (error, car) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).json({status : false});
+        }
+        return res.json(car);
     });
 }
 
