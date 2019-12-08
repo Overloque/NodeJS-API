@@ -3,7 +3,7 @@ const db = require('../db');
 const collection = db.get().collection('numbers');
 
 exports.all = (callback) => {
-    collection.find().toArray(callback);
+    JSON.stringify(collection.find().toArray(callback));
 }
 
 exports.findById = (id, cb) => {

@@ -21,18 +21,18 @@ exports.findById = (req, res) => {
 }
 
 exports.create = (req, res) => {
-    const { name, picture } = req.body;
+    const { number, name } = req.body;
 
-    if (!name || !picture) {
+    if (!number || !name) {
         return res.status(400).end('Missing one or more parameters!');
     }
 
-    Numbers.create({ name, picture }, (error, result) => {
+    Numbers.create({ number, name  }, (error, result) => {
         if (error) {
             console.log(error);
-            return res.sendStatus(500);
+            res.send(JSON.stringify({Status : false}));
         }
-        return res.send(number);
+        res.send(JSON.stringify({Status : true}));
     });
 }
 
@@ -40,9 +40,9 @@ exports.delete = (req, res) => {
     Numbers.delete(req.params.id, (error, result) => {
         if (error) {
             console.log(error);
-            return res.sendStatus(500);
+            return res.send(JSON.stringify({Status : false}));
         }
-        return res.sendStatus(200);
+        return res.send(JSON.stringify({Status : true}));
     });
 }
    
