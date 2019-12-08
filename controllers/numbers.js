@@ -48,24 +48,27 @@ exports.delete = (req, res) => {
     });
 };
 
-exports.isAllowed = (req, res) => {
+exports.isAllowed = async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ status: false, error: 'Фото машины не найдено!' });      
     }
-    fetch(`${detector.url}?path=${encodeURIComponent(req.file.path)}`)
-        .then(response => response.json())
-        .then(({ points, text }) => {
-            if (points && text && text.length) {
-                return Numbers.findByNumber(text[0]);
-            } else {
-                return res.status(500).json({ status: false, error: 'Номер не распознан!' });
-            }
-        })
-        .then(car => {
-            if (car) {
-                if(car.isAllowed)
-            }
-        })
+
+    const response = await fetch(`${detector.url}?path=${encodeURIComponent(req.file.path)}`);
+    const { points, text } = await response.json();
+
+    console.log(points, text);
+
+    if (!points || !text || !text.length || !points.length) {
+        return res.status(500).json({ status: false, error: 'Номер не распознан!' });
+    }
+
+    const car = await Numbers.findByNumber(text[0]);
+    
+    if (!car) {
+        return res.status(200).json({ status: true, found: false, result: { points, text } });
+    } else {
+        return res.status(200).json({ status: true, found: true, car, result: { points, text } });
+    }
 };
 
 function randomString(length) {
