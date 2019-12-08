@@ -9,7 +9,7 @@ const ejs = require('ejs');
 //Set Storage Engine
 
 const storage = multer.diskStorage({
-    destination: './public/uploads/',
+    destination: './images',
     filename: function(req, file, cb){
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
@@ -50,32 +50,21 @@ db.connect('mongodb://localhost:27017/numbersDatabase', error => {
     }
 
     //Folder for images
-    app.use(express.static('./public'));
+    app.use(express.static('./images'));
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended : true }));
 
-    app.get('/', (req, res) => res.render('index'));
+    app.get('/numbers?offset', function(req, res){
+        if(req.query.offset === undefined)
+            numbersController
+    })
+    app.get('/numbers', (req, res) => res.render('index'));
     app.get('/numbers', numbersController.all);
     app.get('/numbers/:id', numbersController.findById);
     app.post('/numbers', numbersController.create);
     app.post('/numbers/:id', numbersController.delete);
 
-    app.post('/upload', (req, res) => {
-        upload(req, res, (err) => {
-            if(err){
-                res.send(JSON.stringify({isComplete: false, msg: err}))
-                console.log(req.file);
-            } else {
-                    if(req.file == undefined){
-                        res.send(JSON.stringify({isComplete: false, msg: 'Error: No picture Selected!'}));       
-                        console.log(req.file);          
-                    }else{
-                        res.send(JSON.stringify({isComplete: true, msg: 'Picture uploaded!'}))
-                        console.log(req.file);
-                    }
-                }
-        });
-    });
+    app.post('/upload', numbersController.upload);
     app.listen(port, () => console.log(`Server has been started on port ${port}!`));
 });

@@ -1,4 +1,5 @@
 const Numbers = require('../models/numbers');
+const multer = require('multer');
 
 exports.all = (req, res) => {
     Numbers.all((error, docs) => {
@@ -45,4 +46,22 @@ exports.delete = (req, res) => {
         return res.send(JSON.stringify({Status : true}));
     });
 }
+
+exports.upload = (req, res) => {
+    upload(req, res, (err) => {
+        if(err){
+            res.send(JSON.stringify({isComplete: false, msg: err}))
+            console.log(req.file);
+        } else {
+                if(req.file === undefined){
+                    res.send(JSON.stringify({isComplete: false, msg: 'Error: No picture Selected!'}));
+                    console.log(req.file);          
+                }else{
+                    res.send(JSON.stringify({isComplete: true, msg: 'Picture uploaded!'}));
+                    socket.send(path.resolve(__dirname, `./images/${req.file.filename}`));    
+                    console.log(req.file);
+                }
+            }
+    });
+};
    
