@@ -6,9 +6,10 @@ exports.all = (callback) => {
     JSON.stringify(collection.find().toArray(callback));
 }
 
-exports.certain = (offset) => {
-    JSON.stringify(collection.find().)
-}
+// exports.certain = (offset) => {
+//     JSON.stringify(collection.find().)
+// }
+
 exports.findById = (id, cb) => {
     collection.findOne({ _id: ObjectID(id) }, cb);
 }
