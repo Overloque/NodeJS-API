@@ -6,7 +6,7 @@ exports.getCars = (req, res) => {
     Numbers.getCars(req.query.offset, (error, cars) => {
         if (error) {
             console.log(error);
-            return res.status(500).json({status : false});
+            return res.status(500).json({status: false});
         }
         return res.json(cars);
     });
@@ -16,7 +16,7 @@ exports.findById = (req, res) => {
     Numbers.findById(req.params.id, (error, car) => {
         if (error) {
             console.log(error);
-            return res.status(500).json({status : false});
+            return res.status(500).json({status: false});
         }
         return res.json(car);
     });
@@ -32,9 +32,9 @@ exports.create = (req, res) => {
     Numbers.create({ number, name  }, (error, result) => {
         if (error) {
             console.log(error);
-            return res.status(500).json({status : false});
+            return res.status(500).json({status: false});
         }
-        res.json({status : true});
+        res.json({status: true});
     });
 };
 
@@ -42,9 +42,9 @@ exports.delete = (req, res) => {
     Numbers.delete(req.params.id, (error, result) => {
         if (error) {
             console.log(error);
-            return res.status(500).json({status : false});
+            return res.status(500).json({status: false});
         }
-        return res.json({status : true});
+        return res.json({status: true});
     });
 };
 
