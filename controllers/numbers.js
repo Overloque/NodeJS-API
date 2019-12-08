@@ -3,18 +3,14 @@ const { detector } = require('../config');
 const Numbers = require('../models/numbers');
 
 exports.getCars = (req, res) => {
-    if (req.query.offset === undefined) {
-        Numbers.all((error, docs) => {
-            if (error) {
-                console.log(error);
-                return res.status(500).json({status : false});
-            }
-            return res.send(docs);
-        });
-    } else {
-        // By offset and limit
-    }
-};
+    Numbers.getCars(req.query.offset, (error, docs) => {
+        if (error) {
+            console.log(err);
+            return res.sendStatus(500);
+        }
+        return res.send(JSON.stringify(docs));
+    });
+}
 
 exports.findById = (req, res) => {
     Numbers.findById(req.params.id, (error, doc) => {
@@ -60,11 +56,16 @@ exports.isAllowed = (req, res) => {
         .then(response => response.json())
         .then(({ points, text }) => {
             if (points && text && text.length) {
-                // проверить есть ли номер в бд и разрешен ли проезд...
+                return Numbers.findByNumber(text[0]);
             } else {
                 return res.status(500).json({ status: false, error: 'Номер не распознан!' });
             }
-        });
+        })
+        .then(car => {
+            if (car) {
+                if(car.isAllowed)
+            }
+        })
 };
 
 function randomString(length) {

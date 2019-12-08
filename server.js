@@ -8,7 +8,7 @@ const upload = require('./middlewares/upload');
 
 db.connect('mongodb://localhost:27017/numbersDatabase', error => {
     if (error) {
-        return console.log(err);
+        return console.log(error);
     }
 
     const numbersController = require('./controllers/numbers');
