@@ -5,7 +5,7 @@ const Numbers = require('../models/numbers');
 exports.getCars = (req, res) => {
     Numbers.getCars(req.query.offset, (error, docs) => {
         if (error) {
-            console.log(err);
+            console.log(error);
             return res.sendStatus(500);
         }
         return res.send(JSON.stringify(docs));
@@ -56,8 +56,6 @@ exports.isAllowed = async (req, res) => {
     const response = await fetch(`${detector.url}?path=${encodeURIComponent(req.file.path)}`);
     const { points, text } = await response.json();
 
-    console.log(points, text);
-
     if (!points || !text || !text.length || !points.length) {
         return res.status(500).json({ status: false, error: 'Номер не распознан!' });
     }
@@ -70,12 +68,3 @@ exports.isAllowed = async (req, res) => {
         return res.status(200).json({ status: true, found: true, car, result: { points, text } });
     }
 };
-
-function randomString(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-       result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-}
