@@ -5,6 +5,7 @@ const ejs = require('ejs');
 const db = require('./db');
 const { port } = require('./config');
 const upload = require('./middlewares/upload');
+const cors = require('./middlewares/cors');
 
 db.connect('mongodb://localhost:27017/numbersDatabase', error => {
     if (error) {
@@ -21,11 +22,14 @@ db.connect('mongodb://localhost:27017/numbersDatabase', error => {
     app.use(express.static(path.resolve(__dirname, './images')));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended : true }));
+    app.use(cors);
 
     app.get('/', (req, res) => res.render('index')); // MAIN PAGE
     app.get('/cars', numbersController.getCars); // GET CARS
+    //GET-запрос - количество страниц (количество записей / 10). Название: /pages
+    app.get('/pages', numbersController.getPages);
     app.get('/cars/:id', numbersController.findById); // FIND CAR
-    app.post('/cars/create', numbersController.create); // CREATE CAR
+    app.post('/cars/add', numbersController.create); // CREATE CAR
     app.post('/cars/remove/:id', numbersController.delete); // REMOVE CAR
     app.post('/check', upload.single('image'), numbersController.isAllowed); // UPLOAD IMAGE
 

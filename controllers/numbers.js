@@ -12,6 +12,16 @@ exports.getCars = (req, res) => {
     });
 }
 
+exports.getPages = (req, res) => {
+    Numbers.getCars((error, pages) => {
+        if(error) {
+            console.log(error);
+            return res.status(500).json({status: false});
+        }
+        return res.json(pages);
+    })
+}
+
 exports.findById = (req, res) => {
     Numbers.findById(req.params.id, (error, car) => {
         if (error) {
@@ -23,6 +33,7 @@ exports.findById = (req, res) => {
 }
 
 exports.create = (req, res) => {
+
     const { number, name } = req.body;
 
     if (!number || !name) {
@@ -34,7 +45,7 @@ exports.create = (req, res) => {
             console.log(error);
             return res.status(500).json({status: false});
         }
-        res.json({status: true});
+        res.json({status: Boolean(result.insertedCount)});
     });
 };
 
@@ -44,7 +55,7 @@ exports.delete = (req, res) => {
             console.log(error);
             return res.status(500).json({status: false});
         }
-        return res.json({status: true});
+        return res.json({status: Boolean(result.deletedCount)});
     });
 };
 
