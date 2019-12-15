@@ -13,13 +13,14 @@ exports.getCars = (req, res) => {
 }
 
 exports.getPages = (req, res) => {
-    Numbers.getCars((error, pages) => {
+    Numbers.getPages((error, pages) => {
         if(error) {
             console.log(error);
             return res.status(500).json({status: false});
         }
-        return res.json(pages);
-    })
+        pages = Math.ceil(pages / 10);
+        return res.json({pages});
+    });
 }
 
 exports.findById = (req, res) => {
@@ -28,6 +29,16 @@ exports.findById = (req, res) => {
             console.log(error);
             return res.status(500).json({status: false});
         }
+        return res.json(car);
+    });
+}
+
+exports.findByNumber = (req, res) => {
+    Numbers.findByNumber(req.params.number, (error, car) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).json({status : false});
+        } 
         return res.json(car);
     });
 }
@@ -68,7 +79,7 @@ exports.isAllowed = async (req, res) => {
     const { points, text } = await response.json();
 
     if (!points || !text || !text.length || !points.length) {
-        return res.status(500).json({ status: false, error: 'Номер не распознан!' });
+        return res.status(200).json({ status: false, error: 'Номер не распознан!' });
     }
 
     const car = await Numbers.findByNumber(text[0]);

@@ -7,7 +7,9 @@ exports.getCars = (offset = 0, callback) => {
 }
 
 exports.getPages = (callback) => {
-    return (collection.count().toArray(callback)) / 10;
+    return collection.count({})
+        .then(pages => callback(null, pages))
+        .catch(error => callback(error));
 }
 
 exports.findByNumber = (number) =>{

@@ -26,8 +26,9 @@ db.connect('mongodb://localhost:27017/numbersDatabase', error => {
 
     app.get('/', (req, res) => res.render('index')); // MAIN PAGE
     app.get('/cars', numbersController.getCars); // GET CARS
-    //GET-запрос - количество страниц (количество записей / 10). Название: /pages
+    //GET-запрос - количество страниц (количество записей / 10). Название домена: /pages
     app.get('/pages', numbersController.getPages);
+    app.get('/search', numbersController.findByNumber);
     app.get('/cars/:id', numbersController.findById); // FIND CAR
     app.post('/cars/add', numbersController.create); // CREATE CAR
     app.post('/cars/remove/:id', numbersController.delete); // REMOVE CAR
