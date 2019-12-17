@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-// const ejs = require('ejs');
 const db = require('./db');
 const { port } = require('./config');
 const upload = require('./middlewares/upload');
@@ -15,7 +14,6 @@ db.connect('mongodb://localhost:27017/numbersDatabase', error => {
     const numbersController = require('./controllers/numbers');
     const app = express();
 
-    //EJS
     app.set('view engine', 'hbs');
     app.set('views', './views');
 
