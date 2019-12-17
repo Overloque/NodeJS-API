@@ -2,48 +2,38 @@ const fetch = require('node-fetch');
 const { detector } = require('../config');
 const Numbers = require('../models/numbers');
 
-exports.getCars = (req, res) => {
-    Numbers.getCars(req.query.offset, (error, cars) => {
-        if (error) {
-            console.log(error);
-            return res.status(500).json({status: false});
-        }
-        return res.json(cars);
-    });
+exports.getCars = async (req, res) => {
+    try {
+        const { number, offset } = req.query;
+        const result = await Numbers.getCars(number, offset);
+        return res.json(result);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({status: false});
+    }
 }
 
-exports.getPages = (req, res) => {
-    Numbers.getPages((error, pages) => {
-        if(error) {
-            console.log(error);
-            return res.status(500).json({status: false});
-        }
-        pages = Math.ceil(pages / 10);
-        return res.json({pages});
-    });
-}
-
-exports.findById = (req, res) => {
-    Numbers.findById(req.params.id, (error, car) => {
-        if (error) {
-            console.log(error);
-            return res.status(500).json({status: false});
-        }
+exports.findById = async (req, res) => {
+    try {
+        const car = await Numbers.findById(req.params.id);
         return res.json(car);
-    });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({status: false});
+    }
 }
 
-exports.findByNumber = (req, res) => {
-    Numbers.findByNumber(req.params.number, (error, car) => {
-        if (error) {
-            console.log(error);
-            return res.status(500).json({status : false});
-        } 
+exports.findByNumber = async (req, res) => {
+    try {
+        const car = await Numbers.findByNumber(req.params.number);
         return res.json(car);
-    });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({status: false});
+    }
 }
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
 
     const { number, name } = req.body;
 
@@ -51,23 +41,27 @@ exports.create = (req, res) => {
         return res.status(400).end('Недостаточно параметров!');
     }
 
-    Numbers.create({ number, name  }, (error, result) => {
-        if (error) {
-            console.log(error);
-            return res.status(500).json({status: false});
+    try {
+        const car = await Numbers.findByNumber(number);
+        if (car) {
+            return res.status(400).json({status: false, error: 'Такой номер уже существует в БД!'});
         }
-        res.json({status: Boolean(result.insertedCount)});
-    });
+        const result = await Numbers.create({ number, name });
+        return res.json({status: Boolean(result.insertedCount)});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({status: false});
+    }
 };
 
-exports.delete = (req, res) => {
-    Numbers.delete(req.params.id, (error, result) => {
-        if (error) {
-            console.log(error);
-            return res.status(500).json({status: false});
-        }
+exports.delete = async (req, res) => {
+    try {
+        const result = await Numbers.delete(req.params.id);
         return res.json({status: Boolean(result.deletedCount)});
-    });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({status: false});
+    }
 };
 
 exports.isAllowed = async (req, res) => {
