@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const ejs = require('ejs');
+// const ejs = require('ejs');
 const db = require('./db');
 const { port } = require('./config');
 const upload = require('./middlewares/upload');
@@ -16,15 +16,17 @@ db.connect('mongodb://localhost:27017/numbersDatabase', error => {
     const app = express();
 
     //EJS
-    app.set('view engine', 'ejs');
+    app.set('view engine', 'hbs');
+    app.set('views', './views');
 
     //Folder for images
-    app.use(express.static(path.resolve(__dirname, './images')));
+    app.use(express.static(path.resolve(__dirname, './public')));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended : true }));
     app.use(cors);
 
     app.get('/', (req, res) => res.render('index')); // MAIN PAGE
+    app.get('/database', (req, res) => res.render('database')); // MAIN PAGE
     app.get('/cars', numbersController.getCars); // GET CARS
     app.get('/search', numbersController.findByNumber);
     app.get('/cars/:id', numbersController.findById); // FIND CAR

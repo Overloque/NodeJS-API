@@ -6,7 +6,7 @@ const collection = db.get().collection('numbers');
 exports.getCars = async (number = null, offset = 0) => {
     const query =  { number: new RegExp(`.*${number || ''}.*`, 'ig') };
     const cars = await collection.find(query).skip(offset * pageLimit).limit(pageLimit).toArray();
-    const counter = await collection.count(query);
+    const counter = await collection.countDocuments(query);
     const pages = Math.ceil(counter / pageLimit);
     return { cars, pages };
 }
