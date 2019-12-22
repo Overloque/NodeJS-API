@@ -1,5 +1,5 @@
-let glNumber = localStorage.getItem('number') ? localStorage.getItem('number') : 0;
-let search = localStorage.getItem('search') ? localStorage.getItem('search') : "";
+let glNumber = 0;
+let search = "";
 document.querySelector('.search').value = search;
 let glUrl = "http://127.0.0.1:3012";
 
@@ -79,7 +79,7 @@ const addAutoResp = response => {
 }
 
 /* Получить список всех автомобилей */
-const getListAuto = async (offset,number) => {
+const getListAuto = async (offset, number) => {
   const url = `${glUrl}/cars?offset=${offset}&number=${number}`;
   try {
     const response = await fetch(url);
@@ -109,7 +109,8 @@ const fillTable = response => {
     table.innerHTML += str;
   }
 
-  let currentPage = glNumber;
+  // debugger;
+  let currentPage = glNumber + 1;
   const pagination = document.querySelector(".pagination");
   pagination.innerHTML = "";
   if (pages !== undefined) {
@@ -188,14 +189,16 @@ document.querySelector('.table').addEventListener('click',function(e) {
 
 /* Обработка нажатия на кнопку "Добавить" при добавлении автомобиля в базу */
 document.querySelector('.form-button').addEventListener('click',function(e) {
-  const number = document.querySelector('.form-number').value;
-  const name = document.querySelector('.form-name').value;
+  const number = document.querySelector('.form-number');
+  const name = document.querySelector('.form-name');
   const form = document.querySelector('.form-area');
 
-  if (checkNumber(number)) {
-    if (checkName(name)) {
+  if (checkNumber(number.value)) {
+    if (checkName(name.value)) {
       form.style.display = 'none';
-      addAuto(number,name).then(addAutoResp).catch(viewError);
+      addAuto(number.value, name.value).then(addAutoResp).catch(viewError);
+      number.value = '';
+      name.value = '';
     } else {
       noty('Поле для ввода марки не должно быть пустым', 'error');
     }
@@ -223,9 +226,10 @@ const checkName = value => {
 document.querySelector('body').addEventListener('click',function(e) {
   const target = e.target;
   if (target.classList.contains('pagination-link')) {
-    const page = target.getAttribute("data-id");
+    const page = +target.getAttribute("data-id");
     glNumber = page;
-    localStorage.setItem('number', glNumber);
+    // localStorage.setItem('number', glNumber);
+    // debugger;
     getListAuto(glNumber, search).then(fillTable).catch(viewError);
   }
 });
@@ -235,8 +239,8 @@ document.querySelector('.input-btn').addEventListener('click',function(e) {
   if (number != search) {
     search = number;
     glNumber = 0;
-    localStorage.setItem('search',number);
-    localStorage.setItem('number',glNumber);
+    // localStorage.setItem('search',number);
+    // localStorage.setItem('number',glNumber);
     getListAuto(glNumber, search).then(fillTable).catch(viewError);
   }
 });

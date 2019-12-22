@@ -25,7 +25,7 @@ exports.findById = async (req, res) => {
 
 exports.findByNumber = async (req, res) => {
     try {
-        const car = await Numbers.findByNumber(req.params.number);
+        const car = await Numbers.findByNumber(req.params.number.toUpperCase());
         return res.json(car);
     } catch (error) {
         console.log(error);
@@ -34,12 +34,14 @@ exports.findByNumber = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-
-    const { number, name } = req.body;
+    let { number, name } = req.body;
 
     if (!number || !name) {
         return res.status(400).end('Недостаточно параметров!');
     }
+
+    name = name.toUpperCase();
+    number = number.toUpperCase();
 
     try {
         const car = await Numbers.findByNumber(number);
@@ -77,7 +79,7 @@ exports.isAllowed = async (req, res) => {
     }
 
     const car = await Numbers.findByNumber(text[0]);
-    
+
     if (!car) {
         return res.status(200).json({ status: true, found: false, result: { points, text } });
     } else {

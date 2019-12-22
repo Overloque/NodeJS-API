@@ -11,8 +11,8 @@ exports.getCars = async (number = null, offset = 0) => {
     return { cars, pages };
 }
 
-exports.findByNumber = (number) =>{
-    return collection.findOne({number: {$eq : number}});
+exports.findByNumber = (number) => {
+    return collection.findOne({number: {$eq: number}});
 }
 
 exports.findById = (id) => {
